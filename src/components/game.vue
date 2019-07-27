@@ -1,6 +1,6 @@
 <template>
     <div class="root">
-        <input autofocus @keydown.up="incrRota()" class="eventCatch">
+        <input autofocus @keydown.left="goLeft()" @keydown.right="goRight()" @keydown.up="incrRota()" class="eventCatch">
         <div class="arena">
             <div class="container">
                 <div class="matriceContainer">
@@ -55,7 +55,7 @@ export default {
         },
         initBoard(y, x) {
             console.log(y, x);
-            this.board[y][x] = getElementById('[' + y + ']' + '[' + x + ']');
+            this.board[y][x] = document.getElementById('[' + y + ']' + '[' + x + ']');
         },
     },
 }
