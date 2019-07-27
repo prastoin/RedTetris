@@ -10,7 +10,7 @@
             v-for="x in matriceSize"
             :key="x"
             class="cell"
-            :style="isCell(y, x) === true ? 'background: yellow; border: 1px solid black;' : 'background: white;'"
+            :style="isCell(y, x) === true ? 'background: yellow; border: 1px solid black;' : ''"
             >
             </div>
         </div> 
@@ -34,11 +34,11 @@ export default {
     ],
     methods: {
         isCell (y, x) {
-            console.log(y - 1, x - 1);
-            console.log(this.tetrimino[this.currTetri].coord[this.currRota])
+//            console.log(y - 1, x - 1);
+//            console.log(this.tetrimino[this.currTetri].coord[this.currRota])
             if (this.tetrimino[this.currTetri].coord[this.currRota][y - 1][x - 1] === 1)
               return true;
-            console.log('nope');
+//            console.log('nope');
             return (false);
         },
     },

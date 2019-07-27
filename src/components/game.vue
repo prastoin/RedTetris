@@ -15,7 +15,7 @@
                                 <div
                                 v-for="x in 10"
                                 :key="x"
-                                :id="x"
+                                :id="'[' + y + ']' + '[' + x + ']'"
                                 class="cell"
                                 >
                                 </div>
@@ -52,6 +52,10 @@ export default {
         {
             this.currRota++;
             this.currRota = (this.currRota === 4 ? 0 : this.currRota);
+        },
+        initBoard(y, x) {
+            console.log(y, x);
+            this.board[y][x] = getElementById('[' + y + ']' + '[' + x + ']');
         },
     },
 }
