@@ -10,7 +10,7 @@
         <tetriDisplay class="rotating-l" :currTetri="6" :currRota="0" :tetrimino="tetrimino" style="top: 9%; left: 10%;"/>
         <tetriDisplay class="rotating-r" :currTetri="0" :currRota="0" :tetrimino="tetrimino" style="bottom: 4%; right: 10%;"/>
         <tetriDisplay class="rotating-l" :currTetri="3" :currRota="0" :tetrimino="tetrimino" style="bottom: 33%; right: 37%;"/>
-        <tetriDisplay class="rotating-r"  :currTetri="5" :currRota="0" :tetrimino="tetrimino" style="bottom: 2%; left: 4%;"/>
+        <tetriDisplay class="rotating-r"  :currTetri="5" :currRota="0" :tetrimino="tetrimino" style="bottom: 6%; left: 4%;"/>
     </div>
     <div class="layer">
         <div class="buttonbox">
