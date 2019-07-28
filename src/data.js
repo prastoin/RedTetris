@@ -33,6 +33,7 @@ const tetrimino = [
 
     {
         name: 'I',
+        texture: 'url(https://lh3.googleusercontent.com/2ZdPa8KBDybnUudpc9yRmaCU3DYHH4SL7gxRTPwyk1oCn_1xCzntDLkb02MChMipFu-N3BzNAtXP2BCiwOl9WgM=s400);',
         coord: [
             [
                 [0, 0, 0, 0],
@@ -62,6 +63,7 @@ const tetrimino = [
     },
     {
         name: 'O',
+        texture: 'url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJatYsk98LXsN-jLLANJSMA8hZw221mWyH8ZIQCCIwdVAjdWJf);',
         coord: [
             [
                 [0, 1, 1, 0],
@@ -91,6 +93,7 @@ const tetrimino = [
     },
     {
         name: 'T',
+        texture: 'url(https://lh3.googleusercontent.com/lwZZl-2dr7iKcwhnDX-UVNAfp9FBXF6tZhoaQYUvCdjJNGUG0OHyl8_l1yKBalM0nh9C52yktqLYz0pGcyuGXg=s400);',
         coord: [
             [
                 [1, 1, 1],
@@ -116,6 +119,7 @@ const tetrimino = [
     },
     {
         name: 'L',
+        texture: 'url(https://i.pinimg.com/originals/63/9e/e3/639ee336abefc1a6a1f40b97db9b409f.jpg);',
         coord: [
             [
                 [0, 0, 1],
@@ -141,6 +145,7 @@ const tetrimino = [
     },
     {
         name: 'J',
+        texture: 'url(https://www.fractalcamo.com/uploads/5/9/0/2/5902948/s189772745713394276_p3860_i150_w640.jpeg);',
         coord: [
             [
                 [1, 0, 0],
@@ -166,6 +171,7 @@ const tetrimino = [
     },
     {
         name: 'Z',
+        texture: 'url(https://tr.rbxcdn.com/3feb68197b8a800072224eaf99613509/420/420/Decal/Png);',
         coord: [
             [
                 [1, 1, 0],
@@ -191,6 +197,7 @@ const tetrimino = [
     },
     {
         name: 'S',
+        texture: 'url(https://www.tynker.com/minecraft/api/block?id=581e8559588161983b8b4569&w=400&h=400&width=400&height=400&mode=contain&format=jpg&quality=75&cache=1m&v=1478395225);',
         coord: [
             [
                 [0, 1, 1],

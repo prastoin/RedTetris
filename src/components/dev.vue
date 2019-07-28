@@ -10,7 +10,7 @@
             v-for="x in matriceSize"
             :key="x"
             class="cell"
-            :style="isCell(y, x) === true ? 'background: yellow; border: 1px solid black;' : ''"
+            :style="isCell(y, x) === true ? 'background-image:' + tetrimino[currTetri].texture + 'background-size: contain;' : ''"
             >
             </div>
         </div> 
