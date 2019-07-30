@@ -70,21 +70,22 @@ export default {
 
 .eventCatch {
     visibility: visible;
-    width: 200vw;
-    height: 200vh;
+    width: 110%;
+    height: 110%;
     position: absolute;
-    top: -10vh; 
-    left: -10vw;
+    top: -10%; 
+    left: -10%;
+    min-height: calc(1230px);
 }
 
 .arena {
+    margin-top: 16px;
     width: 400px;
     height: 1120px;
     background: grey;
     position: absolute;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -30%);
+    transform: translate(-50%);
     .container {
         display: flex;
         flex-direction: column;
