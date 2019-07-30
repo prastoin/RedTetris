@@ -1,4 +1,4 @@
-# redtetris [IN DEVELOPMENT https://redtetris.prastoin.me]
+# redtetris [IN DEVELOPMENT https://www.redtetris.prastoin.me]
 
 ## Project setup
 ```
