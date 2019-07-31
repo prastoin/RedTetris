@@ -5,18 +5,18 @@
             <div class="container">
                 <div class="matriceContainer">
                     <div class="matrice">
-                    <TetriDisplay :currTetri="currTetri" :currRota="currRota" :tetrimino="tetrimino"/>
                         <div 
-                            v-for=" y in 25"
+                            v-for=" (colunm, y) in 26"
                             :key="y"
                             :id="y"
                             class="matriceLine"
-                            :style="y <= 3 ? 'visibility: hidden;': 'visibility: visible;'">
+                            :style="y <= 3 ? 'visibility: visible;': 'visibility: visible;'">
                                 <div
-                                v-for="x in 10"
+                                v-for="(cell, x) in 10"
                                 :key="x"
                                 :id="'[' + y + ']' + '[' + x + ']'"
                                 class="cell"
+                                :style="`background:` + (board[y][x] === 0 ? 'white' : 'red')"
                                 >
                                 </div>
                         </div>
@@ -31,32 +31,77 @@
 </template>
 
 <script>
-import TetriDisplay from "./dev.vue";
-import { tetrimino, board } from "../data.js";
+import { tetrimino, board, currTetri } from "../data.js";
+
 export default {
     name: 'game',
     data () {
         return {
-            currTetri: Math.floor(Math.random() * Math.floor(7)),
-            currRota: Math.floor(Math.random() * Math.floor(4)),
             tetrimino,
             score: 0,
             board,
+            currTetri,
             }
     },
     components : {
-        TetriDisplay,
     },
     methods: {
-        incrRota ()
-        {
+        init() {
+            let continu = true;
+            console.log('in');
+            while (continu)
+            {
+//                let playing = true;
+                if (this.currTetri.n < 0)
+                    this.pickPrint();
+                continu = false;
+            }
+        },
+        pickPrint () {
+            this.currTetri.n = this.getRandomInt(7);
+            this.currTetri.y = 0;
+            do {
+            this.currTetri.rota= this.getRandomInt(4);
+            this.currTetri.x = this.getRandomInt(10);
+            console.log(this.currTetri);
+            } while ((this.draw(this.currTetri)) === false)
+        },
+        draw(currTetri) {
+            console.log(currTetri);
+            for (let y = 0; y < 4; y++)
+            {
+                for (let x = 0; x < 4; x++)
+                {
+                    if ((this.valid((y + currTetri.y), (x + currTetri.x))) === false)
+                    {
+                        this.clearTopBoard();
+                        return (false);
+                    }
+                    this.board[y + currTetri.y][x + currTetri.x] = this.tetrimino[currTetri.n].coord[currTetri.rota][y][x];
+                }
+            }
+        },
+        valid(y, x) {
+            if (y < 0 || y >= 22 || x < 0 || x >= 10)
+                return (false);
+            console.log(`VALID ${y} ${x}`)
+            return (true);
+        },
+        clearTopBoard() {
+            for(let y = 0; y < 4; y++)
+                for(let x = 0; x < 10; x++)
+                    this.board[y][x] = 0;
+        },
+        incrRota() {
             this.currRota++;
             this.currRota = (this.currRota === 4 ? 0 : this.currRota);
         },
-        initBoard(y, x) {
-            console.log(y, x);
-            this.board[y][x] = document.getElementById('[' + y + ']' + '[' + x + ']');
-        },
+        getRandomInt(max) {
+            return (Math.floor(Math.random() * Math.floor(max)));
+        }
+    },
+    mounted () {
+        this.init()
     },
 }
 </script>
