@@ -84,15 +84,17 @@ export default {
             for (let y = 0; y < 4; y++)
                 for (let x = 0; x < 4; x++)
                     if (this.tetrimino[currTetri.n].coord[currTetri.rota][y][x] === 1)
-                        if (this.valid(y + currTetri.y + valueY, currTetri.x + valueX + x) === false)
+                        if (this.valid(y + currTetri.y + valueY, currTetri.x + valueX + x, valueX) === false)
                             return (false);
             return (true);
         },
-        valid(y, x) {
+        valid(y, x, valueX) {
             if (x < 0 || x >= 10)
                 return (false);
             if (y < 0 || y >= 22 + 4 || this.board[y][x] === 2)
             {
+                if (valueX != 0)
+                    return (false);
                 this.blockTetri(this.currTetri);
                 this.pickPrint();
                 return (false);
