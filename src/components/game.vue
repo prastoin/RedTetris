@@ -1,6 +1,6 @@
 <template>
     <div class="root">
-        <input autofocus @keydown.left="goLeft()" @keydown.right="goRight()" @keydown.up="incrRota()" class="eventCatch">
+        <input autofocus @click="goTo(1, 0)" @keydown.down="goTo(0, 1)" @keydown.left="goTo(-1, 0)" @keydown.right="goTo(1, 0)" @keydown.up="incrRota()" class="eventCatch">
         <div class="arena">
             <div class="container">
                 <div class="matriceContainer">
@@ -47,15 +47,9 @@ export default {
     },
     methods: {
         init() {
-            let continu = true;
-            console.log('in');
-            while (continu)
-            {
-//                let playing = true;
-                if (this.currTetri.n < 0)
-                    this.pickPrint();
-                continu = false;
-            }
+            console.log('init\n');
+            if (this.currTetri.n < 0)
+                this.pickPrint();
         },
         pickPrint () {
             this.currTetri.n = this.getRandomInt(7);
@@ -63,38 +57,57 @@ export default {
             do {
             this.currTetri.rota= this.getRandomInt(4);
             this.currTetri.x = this.getRandomInt(10);
-            console.log(this.currTetri);
             } while ((this.draw(this.currTetri)) === false)
         },
         draw(currTetri) {
-            console.log(currTetri);
-            for (let y = 0; y < 4; y++)
-            {
-                for (let x = 0; x < 4; x++)
-                {
-                    if ((this.valid((y + currTetri.y), (x + currTetri.x))) === false)
-                    {
-                        this.clearTopBoard();
-                        return (false);
-                    }
-                    this.board[y + currTetri.y][x + currTetri.x] = this.tetrimino[currTetri.n].coord[currTetri.rota][y][x];
-                }
-            }
-        },
-        valid(y, x) {
-            if (y < 0 || y >= 22 || x < 0 || x >= 10)
+            if (this.moveAble(0, 0, this.currTetri) === false)
                 return (false);
-            console.log(`VALID ${y} ${x}`)
+            for (let y = 0; y < 4; y++)
+                for (let x = 0; x < 4; x++)
+                    this.$set(this.board[y + currTetri.y], x + currTetri.x, this.tetrimino[currTetri.n].coord[currTetri.rota][y][x]);
             return (true);
         },
-        clearTopBoard() {
-            for(let y = 0; y < 4; y++)
-                for(let x = 0; x < 10; x++)
-                    this.board[y][x] = 0;
+        goTo (valueX, valueY) {
+            console.log(`goTo = ` + valueX + valueY);
+            if (this.moveAble(valueX, valueY, this.currTetri))
+            {
+                this.clear4x4(this.currTetri.y, this.currTetri.x);
+                if (valueY != 0)
+                    this.currTetri.y += valueY;
+                else
+                    this.currTetri.x += valueX;
+                this.draw(this.currTetri);
+            }
+        },
+        moveAble (valueX, valueY, currTetri) {
+            for (let y = 0; y < 4; y++)
+                for (let x = 0; x < 4; x++)
+                    if (this.tetrimino[currTetri.n].coord[currTetri.rota][y][x] === 1)
+                        if (this.valid(y + currTetri.y + valueY, currTetri.x + valueX + x) === false)
+                            return (false);
+            return (true);
+        },
+        valid(y, x) {
+            if (y < 0 || y >= 22 + 4 || x < 0 || x >= 10)
+                return (false);
+            return (true);
+        },
+        clear4x4(y, x) {
+            for(let j = 0; j < 4; j++)
+                for(let i = 0; i < 4; i++)
+                    this.board[j + y][i + x] = this.board[j + y][i + x] != 2 ? 0 : this.board[j + y][i + x];
         },
         incrRota() {
-            this.currRota++;
-            this.currRota = (this.currRota === 4 ? 0 : this.currRota);
+            let save = this.currTetri.rota;
+            this.currTetri.rota++;
+            this.currTetri.rota = (this.currTetri.rota === 4 ? 0 : this.currTetri.rota);
+            if (this.moveAble(0, 0, this.currTetri) === false)
+            {
+                this.currTetri.rota = save;
+                return (false);
+            }
+            this.clear4x4(this.currTetri.y, this.currTetri.x);
+            this.draw(this.currTetri);
         },
         getRandomInt(max) {
             return (Math.floor(Math.random() * Math.floor(max)));
