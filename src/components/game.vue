@@ -1,12 +1,12 @@
 <template>
     <div class="root">
-        <input autofocus @click="goTo(1, 0)" @keydown.down="goTo(0, 1)" @keydown.left="goTo(-1, 0)" @keydown.right="goTo(1, 0)" @keydown.up="incrRota()" class="eventCatch">
+        <input autofocus @keydown.down="goTo(0, 1)" @keydown.left="goTo(-1, 0)" @keydown.right="goTo(1, 0)" @keydown.up="incrRota()" class="eventCatch">
         <div class="arena">
             <div class="container">
                 <div class="matriceContainer">
                     <div class="matrice">
                         <div 
-                            v-for=" (colunm, y) in 26"
+                            v-for=" (colunm, y) in 22"
                             :key="y"
                             :id="y"
                             class="matriceLine"
@@ -16,7 +16,7 @@
                                 :key="x"
                                 :id="'[' + y + ']' + '[' + x + ']'"
                                 class="cell"
-                                :style="`background:` + (board[y][x] === 0 ? 'white' : 'red')"
+                                :style="`background:` + cellColor(y, x)"
                                 >
                                 </div>
                         </div>
@@ -64,14 +64,15 @@ export default {
                 return (false);
             for (let y = 0; y < 4; y++)
                 for (let x = 0; x < 4; x++)
-                    this.$set(this.board[y + currTetri.y], x + currTetri.x, this.tetrimino[currTetri.n].coord[currTetri.rota][y][x]);
+                    if (this.board[currTetri.y + y][currTetri.x + x] != 2)
+                        this.$set(this.board[y + currTetri.y], x + currTetri.x, this.tetrimino[currTetri.n].coord[currTetri.rota][y][x]);
             return (true);
         },
         goTo (valueX, valueY) {
             console.log(`goTo = ` + valueX + valueY);
-            if (this.moveAble(valueX, valueY, this.currTetri))
+            if (this.moveAble(valueX, valueY, this.currTetri) === true)
             {
-                this.clear4x4(this.currTetri.y, this.currTetri.x);
+                this.clear4x4(this.currTetri.y, this.currTetri.x, 0); //1 to 0
                 if (valueY != 0)
                     this.currTetri.y += valueY;
                 else
@@ -88,14 +89,24 @@ export default {
             return (true);
         },
         valid(y, x) {
-            if (y < 0 || y >= 22 + 4 || x < 0 || x >= 10)
+            if (x < 0 || x >= 10)
                 return (false);
+            if (y < 0 || y >= 22 + 4 || this.board[y][x] === 2)
+            {
+                this.blockTetri(this.currTetri);
+                this.pickPrint();
+                return (false);
+            }
             return (true);
         },
-        clear4x4(y, x) {
+        blockTetri (currTetri) {
+            this.clear4x4(currTetri.y, currTetri.x, 2); // 1 to 2
+        },
+        clear4x4(y, x, value) {
             for(let j = 0; j < 4; j++)
                 for(let i = 0; i < 4; i++)
-                    this.board[j + y][i + x] = this.board[j + y][i + x] != 2 ? 0 : this.board[j + y][i + x];
+                    if (this.board[j + y][i + x] === 1)
+                        this.$set(this.board[j + y], i + x, value);
         },
         incrRota() {
             let save = this.currTetri.rota;
@@ -106,11 +117,20 @@ export default {
                 this.currTetri.rota = save;
                 return (false);
             }
-            this.clear4x4(this.currTetri.y, this.currTetri.x);
+            this.clear4x4(this.currTetri.y, this.currTetri.x, 0); // 1 to 0
             this.draw(this.currTetri);
         },
         getRandomInt(max) {
             return (Math.floor(Math.random() * Math.floor(max)));
+        },
+        cellColor(y, x)
+        {
+            if (this.board[y + 4][x] === 1)
+                return ('red;');
+            else if (this.board[y + 4][x] === 2)
+                return ('blue;')
+            else
+                return ('white;')
         }
     },
     mounted () {
@@ -139,7 +159,7 @@ export default {
 .arena {
     margin-top: 16px;
     width: 400px;
-    height: 1120px;
+    height: 1000px;
     background: grey;
     position: absolute;
     left: 50%;
@@ -150,7 +170,7 @@ export default {
         width: 100%;
         height: 100%;
         .matriceContainer {
-            height: 1000px;
+            height: 880px;
             width: 100%;
             position: relative;
             .matrice{
