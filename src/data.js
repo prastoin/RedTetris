@@ -38,6 +38,7 @@ let currTetri = {
     rota: 0, //max 3 (4)
     y: 0,
     x: 0,
+    inRota: false,
     texture: undefined,
 }
 

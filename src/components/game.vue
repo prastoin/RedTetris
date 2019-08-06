@@ -60,8 +60,8 @@ export default {
             } while ((this.draw(this.currTetri)) === false)
         },
         draw(currTetri) {
-            if (this.moveAble(0, 0, this.currTetri) === false)
-                return (false);
+//            if (this.moveAble(0, 0, this.currTetri) === false)
+//                return (false);
             for (let y = 0; y < 4; y++)
                 for (let x = 0; x < 4; x++)
                     if (this.board[currTetri.y + y][currTetri.x + x] != 2)
@@ -93,7 +93,7 @@ export default {
                 return (false);
             if (y < 0 || y >= 22 + 4 || this.board[y][x] === 2)
             {
-                if (valueX != 0)
+                if (valueX != 0 || this.currTetri.inRota === true) 
                     return (false);
                 this.blockTetri(this.currTetri);
                 this.pickPrint();
@@ -114,11 +114,14 @@ export default {
             let save = this.currTetri.rota;
             this.currTetri.rota++;
             this.currTetri.rota = (this.currTetri.rota === 4 ? 0 : this.currTetri.rota);
+            this.currTetri.inRota = true;
             if (this.moveAble(0, 0, this.currTetri) === false)
             {
                 this.currTetri.rota = save;
+                this.currTetri.inRota = false;
                 return (false);
             }
+            this.currTetri.inRota = false;
             this.clear4x4(this.currTetri.y, this.currTetri.x, 0); // 1 to 0
             this.draw(this.currTetri);
         },
