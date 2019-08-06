@@ -57,7 +57,8 @@ export default {
             do {
             this.currTetri.rota= this.getRandomInt(4);
             this.currTetri.x = this.getRandomInt(10);
-            } while ((this.draw(this.currTetri)) === false)
+            } while ((this.moveAble(0, 0, this.currTetri)) === false)
+            this.draw(this.currTetri);
         },
         draw(currTetri) {
 //            if (this.moveAble(0, 0, this.currTetri) === false)
