@@ -54,7 +54,7 @@ export default {
         pickPrint () {
             console.log('pickprint'
             )
-            this.currTetri.n = 1;//this.getRandomInt(7);
+            this.currTetri.n = this.getRandomInt(7);
             this.currTetri.y = 0;
             do {
             this.currTetri.rota= this.getRandomInt(4);
