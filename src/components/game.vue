@@ -52,7 +52,9 @@ export default {
                 this.pickPrint();
         },
         pickPrint () {
-            this.currTetri.n = this.getRandomInt(7);
+            console.log('pickprint'
+            )
+            this.currTetri.n = 1;//this.getRandomInt(7);
             this.currTetri.y = 0;
             do {
             this.currTetri.rota= this.getRandomInt(4);
@@ -61,11 +63,10 @@ export default {
             this.draw(this.currTetri);
         },
         draw(currTetri) {
-//            if (this.moveAble(0, 0, this.currTetri) === false)
-//                return (false);
+            console.log('draw');
             for (let y = 0; y < 4; y++)
                 for (let x = 0; x < 4; x++)
-                    if (this.board[currTetri.y + y][currTetri.x + x] != 2)
+                    if (this.board[currTetri.y + y][currTetri.x + x] != 2 && this.tetrimino[currTetri.n].coord[currTetri.rota][y][x] === 1)
                         this.$set(this.board[y + currTetri.y], x + currTetri.x, this.tetrimino[currTetri.n].coord[currTetri.rota][y][x]);
             return (true);
         },
@@ -82,6 +83,7 @@ export default {
             }
         },
         moveAble (valueX, valueY, currTetri) {
+            console.log('moveable');
             for (let y = 0; y < 4; y++)
                 for (let x = 0; x < 4; x++)
                     if (this.tetrimino[currTetri.n].coord[currTetri.rota][y][x] === 1)
@@ -103,7 +105,37 @@ export default {
             return (true);
         },
         blockTetri (currTetri) {
+            console.log('blocktetri');
             this.clear4x4(currTetri.y, currTetri.x, 2); // 1 to 2
+            this.fullLine(currTetri);//checking full line on 4y
+        },
+        fullLine(currTetri){
+            console.log('fullLINE');
+            for (let y = 0; y < 4; y++)
+                for (let x = 0; x < 10 && y < 26 && (this.board[y + currTetri.y][x] === 2); x++)
+                    if (x === 9 )
+                    {
+                        console.log('deleting', y);
+                        this.board[y + currTetri.y].forEach((y, x) => {
+                            this.$set(this.board[y + currTetri.y], x, 0);
+                        });
+                        this.fall(y + currTetri.y);
+                        debugger;
+                    }
+        },
+        fall(y){
+            console.log('fall');
+            while (y >= 4)
+            {
+                for(let x = 0; x < 10; x++)
+                    this.swapUpper(y, x);
+                y--;
+            }
+        },
+        swapUpper(y, x){
+            let tmp = this.board[y][x];
+            this.$set(this.board[y], x, this.board[y - 1][x]);
+            this.$set(this.board[y - 1], x, tmp);
         },
         clear4x4(y, x, value) {
             for(let j = 0; j < 4; j++)
@@ -112,6 +144,7 @@ export default {
                         this.$set(this.board[j + y], i + x, value);
         },
         incrRota() {
+            console.log('incrRota');
             let save = this.currTetri.rota;
             this.currTetri.rota++;
             this.currTetri.rota = (this.currTetri.rota === 4 ? 0 : this.currTetri.rota);
@@ -200,5 +233,4 @@ export default {
         }
     }
 }
-
 </style>
