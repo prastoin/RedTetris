@@ -39,6 +39,7 @@ let currTetri = {
     y: 0,
     x: 0,
     inRota: false,
+    playing: true,
     texture: undefined,
 }
 
