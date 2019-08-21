@@ -47,6 +47,7 @@ export default {
             score: 0,
             board,
             currTetri,
+            previTetri: { ...currTetri},
             intervalID: null,
             }
     },
@@ -79,34 +80,33 @@ export default {
                 do {
                 this.currTetri.rota= this.getRandomInt(4);
                 this.currTetri.x = this.getRandomInt(10);
-                } while ((this.moveAble(0, 0, this.currTetri)) === false)
+                } while ((this.moveAble(0, 0, this.currTetri, false)) === false)
                 this.render(this.currTetri);
             }
         },
-        printPre(currTetri){
-            console.log(currTetri);
-            let saveTetri = { ...currTetri };
-            console.log(saveTetri);
-            saveTetri.y = saveTetri.y >= 4 ? saveTetri.y : 4; 
-            while(this.moveAble(0, -1, saveTetri) && saveTetri.y <= 25)
-                saveTetri.y++;
-            if (saveTetri.y === 26)
-                saveTetri.y--;
-            this.draw(saveTetri);
+        printPre(currTetri, previTetri){
+            let sumX;
+            let sumY;
+            previTetri.y = previTetri.y >= 4 ? previTetri.y : 4; 
+            while(this.moveAble(0, +1, previTetri, true))
+                previTetri.y++;
+            if (previTetri.y === 26)
+                previTetri.y--;
+            this.draw(previTetri, 3);
         },
-        draw(currTetri) {
+        draw(currTetri, value) {
             for (let y = 0; y < 4; y++)
                 for (let x = 0; x < 4; x++)
                     if (this.board[currTetri.y + y][currTetri.x + x] != 2 && this.tetrimino[currTetri.n].coord[currTetri.rota][y][x] === 1)
-                        this.$set(this.board[y + currTetri.y], x + currTetri.x, this.tetrimino[currTetri.n].coord[currTetri.rota][y][x]);
+                        this.$set(this.board[y + currTetri.y], x + currTetri.x, value);//this.tetrimino[currTetri.n].coord[currTetri.rota][y][x]);
             return (true);
         },
         goTo (valueX, valueY) {
             if (this.currTetri.playing === false)
                 clearInterval(this.intervalID);
-            if (this.moveAble(valueX, valueY, this.currTetri) === true)
+            if (this.moveAble(valueX, valueY, this.currTetri, false) === true)
             {
-                this.clear4x4(this.currTetri.y, this.currTetri.x, 0); //1 to 0
+                this.clear4x4(this.currTetri.y, this.currTetri.x, 0, 1); //1 to 0
                 if (valueY != 0)
                     this.currTetri.y += valueY;
                 else
@@ -115,37 +115,47 @@ export default {
             }
         },
         render () {
-//           this.printPre(this.currTetri);
-           this.draw(this.currTetri);
+            if (this.previTetri.n != this.currTetri.n || this.previTetri.x != this.currTetri.x || this.previTetri.rota != this.currTetri.rota)
+            {
+                console.log('changement');
+                this.clear4x4(this.previTetri.y, this.previTetri.x, 0, 3); //3 to 0
+                console.log(`clearing at ${this.previTetri.y} et ${this.previTetri.x}`);
+                this.previTetri = { ...this.currTetri};
+            }
+            this.printPre(this.currTetri, this.previTetri);
+            this.draw(this.currTetri, 1);
         },
-        moveAble (valueX, valueY, currTetri) {
+        moveAble (valueX, valueY, currTetri, previ) {
             for (let y = 0; y < 4; y++)
                 for (let x = 0; x < 4; x++)
                     if (this.tetrimino[currTetri.n].coord[currTetri.rota][y][x] === 1)
-                        if ((this.valid(y + currTetri.y + valueY, currTetri.x + valueX + x, valueX, currTetri)) === false)
+                        if ((this.valid(y + currTetri.y + valueY, currTetri.x + valueX + x, valueX, currTetri, previ)) === false)
                              return (false);
             return (true);
         },
-        valid(y, x, valueX, currTetri) {
+        valid(y, x, valueX, currTetri, previ) {
             if (x < 0 || x >= 10)
                 return (false);
             if (y < 0 || y >= 22 + 4 || this.board[y][x] === 2)
             {
-                if (valueX != 0 || currTetri.inRota === true) 
+                if (valueX != 0 || currTetri.inRota === true) //deplacement sur x
                     return (false);
-                if (currTetri.y >= 0 && currTetri.y <= 3)
+                if (currTetri.y >= 0 && currTetri.y <= 3) //loose car block sur spawn
                 {
                     currTetri.playing = false;
                     return (false);
                 }
-                this.blockTetri(currTetri);
-                this.pickPrint();
+                if (previ === false)
+                {
+                    this.blockTetri(currTetri);
+                    this.pickPrint();
+                }
                 return (false);
             }
             return (true);
         },
         blockTetri (currTetri) {
-            this.clear4x4(currTetri.y, currTetri.x, 2); // 1 to 2
+            this.clear4x4(currTetri.y, currTetri.x, 2, 1); // 1 to 2
             this.fullLine(currTetri);//checking full line on 4y
         },
         fullLine(currTetri){
@@ -173,10 +183,10 @@ export default {
             this.$set(this.board[y], x, this.board[y - 1][x]);
             this.$set(this.board[y - 1], x, tmp);
         },
-        clear4x4(y, x, value) {
+        clear4x4(y, x, value, toClear) {
             for(let j = 0; j < 4; j++)
                 for(let i = 0; i < 4; i++)
-                    if (this.board[j + y][i + x] === 1)
+                    if (this.board[j + y][i + x] === toClear)
                         this.$set(this.board[j + y], i + x, value);
         },
         incrRota() {
@@ -184,14 +194,14 @@ export default {
             this.currTetri.rota++;
             this.currTetri.rota = (this.currTetri.rota === 4 ? 0 : this.currTetri.rota);
             this.currTetri.inRota = true;
-            if (this.moveAble(0, 0, this.currTetri) === false)
+            if (this.moveAble(0, 0, this.currTetri, false) === false)
             {
                 this.currTetri.rota = save;
                 this.currTetri.inRota = false;
                 return (false);
             }
             this.currTetri.inRota = false;
-            this.clear4x4(this.currTetri.y, this.currTetri.x, 0); // 1 to 0
+            this.clear4x4(this.currTetri.y, this.currTetri.x, 0, 1); // 1 to 0
             this.render(this.currTetri);
         },
         getRandomInt(max) {
@@ -203,6 +213,8 @@ export default {
                 return ('red;');
             else if (this.board[y + 4][x] === 2)
                 return ('blue;')
+            else if (this.board[y + 4][x] === 3)
+                return ('black');
             else
                 return ('white;')
         }
