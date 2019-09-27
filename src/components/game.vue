@@ -85,8 +85,6 @@ export default {
             }
         },
         printPre(currTetri, previTetri){
-            let sumX;
-            let sumY;
             previTetri.y = previTetri.y >= 4 ? previTetri.y : 4; 
             while(this.moveAble(0, +1, previTetri, true))
                 previTetri.y++;
@@ -117,9 +115,7 @@ export default {
         render () {
             if (this.previTetri.n != this.currTetri.n || this.previTetri.x != this.currTetri.x || this.previTetri.rota != this.currTetri.rota)
             {
-                console.log('changement');
                 this.clear4x4(this.previTetri.y, this.previTetri.x, 0, 3); //3 to 0
-                console.log(`clearing at ${this.previTetri.y} et ${this.previTetri.x}`);
                 this.previTetri = { ...this.currTetri};
             }
             this.printPre(this.currTetri, this.previTetri);
@@ -292,7 +288,7 @@ export default {
     }
 }
 
-@media screen and (min-width: 400px) and (min-height: 1000px) {
+@media screen and (min-width: 400px) and (min-height: 850px) {
     .arena {
         width: 400px;
         height: 1000px;
