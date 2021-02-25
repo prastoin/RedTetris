@@ -1,4 +1,4 @@
-# redtetris [IN DEVELOPMENT https://www.redtetris.prastoin.me]
+# redtetris [IN DEVELOPMENT https://prastoin-redtetris.netlify.app/]
 
 ## Project setup
 ```
